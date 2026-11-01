@@ -34,3 +34,16 @@ Times are MSK, 2026-11-01. Session start 13:22.
   grids trimmed before seeing any real result: ALS 6 configs (factors {32,64} × reg {0.01,0.1} with log-seconds confidence,
   + count-based confidence, + a=5), rules 10 configs, PPR full 12 (cheap closed form). Fold B only for the best config of
   each method. CBF dropped.
+- 14:28 Real data: schema as in CLAUDE.md (+ `channel_title`); all 1,260 template users are in the view log (CLAUDE.md said
+  ~1,150 → corrected). prep 28 s. Safety net `popularity.csv` + `repeat.csv` written and checked at 14:29.
+- 14:29–14:35 `run.py validate` (fold A grids, fold B check, hybrid CV). Best: PPR α=0.7 count80 restart=user 0.3871 (test);
+  ALS weak (≤ 0.1923); hybrid lambdarank 0.4214 → designated final (results/final_choice.md, written before any upload).
+  Popularity of the last 4 weeks beats all-history popularity (0.3022 vs 0.2688) but the fill stays all-history for
+  all methods (protocol fixed before results; changing it now would alter every row).
+- 14:35–14:52 FAILURE: `run.py final` hung (no output > 10 min). First `sample` showed LightGBM frames → guessed merged
+  lambdarank groups (fold-A and fold-B rows share uids) → offset fold-B uids by 10⁶ (correct but not the cause); rerun hung
+  again, second `sample` showed the Python loop in pandas `IndexEngine.__contains__` → root cause
+  `[u for u in FB.users_all if u in set(FB.hist.uid)]` rebuilds a ~2 M-element set per user. Fix: `np.intersect1d`.
+  Rerun: 58 s wall, `hybrid.csv` OK by the checker.
+- 14:53 examples: heavy viewer uid 3424 / near-cold uid 368 chosen automatically (alternatives listed in examples.md).
+- Kaggle uploads: none done by Claude Code (permission not given in PROMPT.md).

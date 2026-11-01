@@ -7,10 +7,11 @@ schedule (Kaggle community competition `sweettv-tv-program-recommender`, metric 
 ```bash
 pip install -r requirements.txt          # macOS: brew install libomp first (LightGBM)
 bash scripts/download_data.sh            # Kaggle CLI; competition rules must be accepted on the website
-python src/prep.py                       # join views x labelled schedule -> cache/*.parquet       (RUNTIME_PREP)
-python src/run.py validate               # fold A: baselines, PPR / ALS / rules grids, fold B check, hybrid CV (RUNTIME_VAL)
-python src/run.py final                  # history 11-30 -> submissions/*.csv (+ checker)             (RUNTIME_FINAL)
-python src/run.py examples               # results/examples.md, results/hand_check.md
+python src/prep.py                       # join views x labelled schedule -> cache/*.parquet       (~30 s)
+python src/run.py validate               # fold A: baselines, PPR / ALS / rules grids, fold B check, hybrid CV (~6 min)
+python src/run.py final                  # history 11-30 -> submissions/*.csv (+ checker)             (~1 min; add 'singles' to rewrite the single-method files)
+python src/run.py examples               # results/examples.md, results/hand_check.md (~30 s)
+python src/run.py baselines              # quick popularity.csv + repeat.csv only (~6 s)
 ```
 Every validation run appends rows to `results/attempts.csv` (all configurations tried) and `results/timings.csv`.
 
@@ -27,7 +28,7 @@ Every validation run appends rows to `results/attempts.csv` (all configurations 
 | `submissions/` | submission files; the designated final one is named in `results/final_choice.md` |
 
 ## Designated final submission
-DESIGNATED_FINAL
+`submissions/hybrid.csv` (LightGBM lambdarank re-ranker; fold-A MAP@5 0.4214 on test users). Chosen by validation before any Kaggle upload — see `results/final_choice.md`.
 
 ## Environment
 See `results/versions.txt`.
