@@ -118,7 +118,7 @@ User A's history is children's cartoons: repeat, PPR and the hybrid stay in [Д�
 - Report: drafted by Claude Code from the files in `results/` (the instructor allows AI-drafted reports if the student hand-checks them); I checked it as listed below.
 - What I personally verified: (1) AP@5 = 0.520 for user A recomputed by hand from `results/hand_check.md`; (2) the three join overlaps 1,200 / 1,500 / 1,190 s recomputed from the view record and airing times; (3) the ground-truth rule in §1 matches the competition Data tab; (4) every reference URL opens; (5) the Kaggle scores in Table 2 match my Submissions page, Figure 1; (6) re-ran `python src/run.py validate` and got the same fold-A numbers.
 - What I trusted without verification: the join and feature code beyond the single worked example; the PPR closed form beyond the numerical check against power iteration; the internals of `implicit` and LightGBM; the tie-break of the truth rule; the explanation of the Kaggle–validation gap.
-- Session log: `petrenko_maksim_midterm_session.json` (Claude Code transcript, unmodified), 2026-11-01, 13:22 – end time (MSK).
+- Session log: `petrenko_maksim_midterm_session.json` (Claude Code transcript, unmodified), 2026-11-01, 13:22 – 17:17 (MSK).
 
 ## References
 <ol class="refs">
