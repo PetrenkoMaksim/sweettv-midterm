@@ -1,0 +1,5 @@
+file_in_repo,kaggle_display_name,private_score,public_score,source
+submissions/hybrid_chanrecrel_ens4.csv,hybrid_chanrecrel_ens4.csv,0.44826,0.45214,report/figures/kaggle_submissions.jpg (Submissions page screenshot taken by Maksim 2026-11-01 ~17:00)
+submissions/hybrid_chanrel.csv,hybrid_chanrel.csv,0.44436,0.44985,same screenshot
+submissions/ppr.csv,ppr.csv,0.40848,0.41923,same screenshot
+submissions/popularity.csv,popularity.csv,0.29969,0.30258,same screenshot

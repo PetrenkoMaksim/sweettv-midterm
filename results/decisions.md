@@ -69,3 +69,7 @@ Times are MSK, 2026-11-01. Session start 13:22.
   truth_repeat_share.txt); (3) the report states which programme metadata is used. Report trimmed and measured: with a
   700-word Discussion and the screenshot, content stays ≤ 5 pages. Reference italics fixed (HTML list, text unchanged).
   Checklist: results/deliverables_checklist.md.
+- ~17:00 Maksim uploaded 4 files and saved the screenshot as report/figures/kaggle_submissions.jpg. Scores copied from it into
+  results/kaggle_scores.csv. Kaggle displays names without "+" → submission files renamed with git mv (same content; ux_stats.csv
+  regenerated, identical numbers); `run.py final` now writes names without "+"; make_pdf.sh and report point to the .jpg.
+  While filling the report I first wrote the Kaggle−validation gap as "0.02–0.03"; computed values are 0.016–0.031 → fixed.

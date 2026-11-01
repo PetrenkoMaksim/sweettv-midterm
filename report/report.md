@@ -5,10 +5,10 @@
 <div class="titleblock">
 Student: Maksim Petrenko &nbsp;&nbsp; Team: Individual &nbsp;&nbsp; Email: madsm1006@gmail.com &nbsp;&nbsp; Date: 2026-11-01<br>
 Assignment: Midterm Quiz — TV Program Recommendation (sweet.tv Kaggle competition)<br>
-Code: https://github.com/TODO-MAKSIM/TODO-repo &nbsp;&nbsp; Kaggle user: TODO-MAKSIM
+Code: https://github.com/TODO-MAKSIM/TODO-repo &nbsp;&nbsp; Kaggle user: underqualified
 </div>
 
-**Abstract** — We recommend five TV programmes per user for ISO weeks 31–42 of 2020 from sweet.tv channel-viewing logs of weeks 11–30 and the programme schedule, scored by MAP@5. Views are joined to labelled airings by channel and time overlap, and every method is validated on the same temporal split (history weeks 11–20, target weeks 21–30) with the competition's own label rule; we compare popularity, Personalized PageRank (PPR), implicit ALS and association rules, and combine them in a LightGBM re-ranker. A rank-averaged ensemble of four LightGBM re-rankers reaches MAP@5 0.4319 on the 1,238 test users of the validation fold, against 0.3871 for the best single method (PPR) and 0.2688 for popularity; its Kaggle private score is TODO-MAKSIM. Because the label counts repeatedly watched airings, methods that keep a user's own programmes on top dominate pure collaborative filtering.
+**Abstract** — We recommend five TV programmes per user for ISO weeks 31–42 of 2020 from sweet.tv channel-viewing logs of weeks 11–30 and the programme schedule, scored by MAP@5. Views are joined to labelled airings by channel and time overlap, and every method is validated on the same temporal split (history weeks 11–20, target weeks 21–30) with the competition's own label rule; we compare popularity, Personalized PageRank (PPR), implicit ALS and association rules, and combine them in a LightGBM re-ranker. A rank-averaged ensemble of four LightGBM re-rankers reaches MAP@5 0.4319 on the 1,238 test users of the validation fold, against 0.3871 for the best single method (PPR) and 0.2688 for popularity; its Kaggle private score is 0.44826 (public 0.45214). Because the label counts repeatedly watched airings, methods that keep a user's own programmes on top dominate pure collaborative filtering.
 
 *Index Terms* — recommender systems, implicit feedback, personalized PageRank, matrix factorization, association rules, MAP@5
 
@@ -48,16 +48,16 @@ Code: https://github.com/TODO-MAKSIM/TODO-repo &nbsp;&nbsp; Kaggle user: TODO-MA
 ## 4. Experiments
 | Method (best config of its grid) | MAP@5 fold A (all, n=4,643) | MAP@5 fold A (test, n=1,238) | fold B (test) | fit + predict | Kaggle public / private |
 |---|---|---|---|---|---|
-| Popularity (all history weeks) | 0.2465 | 0.2688 | 0.2742 | 0.6 s | TODO-MAKSIM |
+| Popularity (all history weeks) | 0.2465 | 0.2688 | 0.2742 | 0.6 s | 0.30258 / 0.29969 |
 | Popularity (last 4 weeks) | 0.2747 | 0.3022 | – | 0.4 s | – |
 | Repeat frequency (reference) | 0.3201 | 0.3631 | 0.3413 | 1.8 s | – |
-| PPR α=0.7, edge=count80, restart=user | 0.3460 | 0.3871 | 0.3576 | 9.9 s | TODO-MAKSIM |
+| PPR α=0.7, edge=count80, restart=user | 0.3460 | 0.3871 | 0.3576 | 9.9 s | 0.41923 / 0.40848 |
 | ALS 64 factors, λ=0.1, conf=1+count80 | 0.1908 | 0.1923 | 0.2045 | 2.9 s | – |
 | Rules sup≥20, conf≥0.2, max, self-rule | 0.2739 | 0.2973 | 0.2904 | 1.8 s | – |
-| Hybrid v1: LightGBM lambdarank, 4 candidate sources | 0.3813 | 0.4214 | – | 57.8 s (CV) / 54.0 s (final) | TODO-MAKSIM or – |
+| Hybrid v1: LightGBM lambdarank, 4 candidate sources | 0.3813 | 0.4214 | – | 57.8 s (CV) / 54.0 s (final) | – |
 | + channel-affinity candidates | 0.3853 | 0.4258 | – | 63.0 s (CV) | – |
-| + within-user relative features | 0.3862 | 0.4258 | – | 58.8 s (CV) / 61.6 s (final) | TODO-MAKSIM or – |
-| 4-objective rank-average ensemble (final) | 0.3903 | **0.4319** | – | 4 CV runs 49–63 s each / 136.6 s (final) | TODO-MAKSIM |
+| + within-user relative features | 0.3862 | 0.4258 | – | 58.8 s (CV) / 61.6 s (final) | 0.44985 / 0.44436 |
+| 4-objective rank-average ensemble (final) | 0.3903 | **0.4319** | – | 4 CV runs 49–63 s each / 136.6 s (final) | **0.45214 / 0.44826** |
 
 *Table 2. Same fold, users, candidates and metric for every row (`results/attempts.csv`, 63 runs incl. 12 PPR, 6 ALS, 10 rules, 27 hybrid runs; `results/timings.csv`; CV times include the 22 s candidate build). Not chosen (test users): v1 binary 0.4172 / 3 seeds 0.4195; fold-B rows in CV training 0.4255; recency features with lambdarank alone 0.4232; Poisson / graded / binary alone 0.4213 / 0.4248 / 0.4219; 1,000 trees and 127 leaves 0.4166; channel top-100 candidates (recall 0.8662) 0.4282.*
 
@@ -93,11 +93,11 @@ User A's history is children's cartoons: repeat, PPR and the hybrid stay in [Д�
 
 **What users would see.** Across the 1,260 test users, 89 % of the final hybrid's Top-5 slots are shows the user already watched ≥ 80 % in weeks 11–30, 2.8 % are shows the user never touched, and the lists use 112 distinct shows (popularity 5, PPR 190, repeat 438; `results/ux_stats.csv`). In the fold-A truth only 54 % of the items had been watched ≥ 80 % before and 28.5 % never touched (`results/truth_repeat_share.txt`) — the models are more repeat-heavy than the users.
 
-**Verification.** (i) `tools/evaluate.py` self-test passes (`results/evaluate_selftest.txt`); (ii) PPR closed form = power iteration to 7.0e-10; (iii) one join (view 20:59:15–22:04:50 on channel 1495 overlaps three cartoon airings by 1,200, 1,500 and 1,190 s) and (iv) one AP@5 are laid out in `results/hand_check.md`; (v) every submission passes `tools/check_submission.py`. TODO-MAKSIM: state which of (iii)/(iv) you recomputed by hand and the result; Kaggle score of `popularity.csv` vs its validation 0.2688.
+**Verification.** (i) `tools/evaluate.py` self-test passes (`results/evaluate_selftest.txt`); (ii) PPR closed form = power iteration to 7.0e-10; (iii) one join (view 20:59:15–22:04:50 on channel 1495 overlaps three cartoon airings by 1,200, 1,500 and 1,190 s) and (iv) one AP@5 are laid out in `results/hand_check.md`; (v) every submission passes `tools/check_submission.py`; (vi) the four uploaded files keep their fold-A order on Kaggle's private split (0.44826 > 0.44436 > 0.40848 > 0.29969 vs 0.4319 > 0.4258 > 0.3871 > 0.2688, test users), each 0.016–0.031 higher on Kaggle (`results/kaggle_scores.csv`). TODO-MAKSIM: state which of (iii)/(iv) you recomputed by hand and the result.
 
 **Kaggle (Figure 1).** Designated final submission, chosen by fold-A MAP@5 (`results/final_choice.md`): 
-`submissions/hybrid_chan+rec+rel_ens4.csv`; private score TODO-MAKSIM.
-![Kaggle submissions page](figures/kaggle_submissions.png)
+`submissions/hybrid_chanrecrel_ens4.csv`; private score 0.44826, public 0.45214 — the best of the four uploads.
+![Kaggle submissions page](figures/kaggle_submissions.jpg)
 
 ## 5. Discussion
 TODO-MAKSIM — write in your own words from `results/discussion_notes.md`: strategy for sweet.tv (validation + cost + examples); how the methods differ and what it means for users; one failure case (log excerpt → root cause → fix → verification); what worked / surprised; limitations; next improvement.

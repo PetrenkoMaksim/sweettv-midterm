@@ -99,3 +99,9 @@
 
 ## Discussion length budget (measured by rendering the report with a placeholder Discussion and screenshot)
 - ≤ ~700 words in §5 keeps all content before "References" within 5 pages; at 900 words it reaches the limit.
+
+## Kaggle vs validation (results/kaggle_scores.csv; uploads made by Maksim ~16:58–17:00, after the designation)
+- Private / public: ens4 0.44826 / 0.45214; hybrid_chanrel 0.44436 / 0.44985; PPR 0.40848 / 0.41923; popularity 0.29969 / 0.30258.
+- Fold-A test-user order is preserved on Kaggle private; Kaggle − validation = +0.0164 (ens4), +0.0186 (chanrel),
+  +0.0214 (PPR), +0.0309 (popularity) — plausibly the longer final history (20 vs 10 weeks), not verified.
+- Ensemble gain on Kaggle private: +0.0039 over the single lambdarank (validation: +0.0061).

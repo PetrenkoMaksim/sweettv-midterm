@@ -17,10 +17,10 @@
 | PDF report | `bash scripts/make_pdf.sh` → `deliverables/petrenko_maksim_midterm_report.pdf` (≤ 5 pages excl. references) | **Maksim** |
 | Original, unmodified AI-session export | `bash scripts/export_session.sh` → `deliverables/petrenko_maksim_midterm_session.json` | **Maksim** |
 | PDF: GitHub link | title block `TODO-MAKSIM` | **Maksim** |
-| PDF: screenshot of the highest returned private score of the designated final submission | `report/figures/kaggle_submissions.png` (Figure 1) | **Maksim** |
+| PDF: screenshot of the highest returned private score of the designated final submission | `report/figures/kaggle_submissions.jpg` (Figure 1) | **Maksim** |
 | Repo: implementation code | `src/`, `tools/` | done (push) |
 | Repo: reproduction instructions (optional) | `README.md` | done |
-| Repo: the final submission file used for the reported score | `submissions/hybrid_chan+rec+rel_ens4.csv` (committed) | done (push) |
+| Repo: the final submission file used for the reported score | `submissions/hybrid_chanrecrel_ens4.csv` (committed) | done (push) |
 | Kaggle submission description = full name (Russian) & Kaggle name | `Петренко Максим (underqualified)` | **Maksim** |
 | ≤ 5 Kaggle submissions ("so be wise") | plan: 4 uploads (`results/final_choice.md`) | **Maksim** |
 | Deadline FKN: 1 Nov 19:00 | — | **Maksim** |

@@ -192,7 +192,7 @@ def final():
     p = ranker.rank_avg(d, ps) if len(ps) > 1 else ps[0]
     preds = ranker.to_preds(d, p)
     log_timing("hybrid", f"final fit A+B rows={len(tr)}, predict rows={len(d)}", "final", time.time() - t, len(hu))
-    name = "hybrid" if tag == "none" else f"hybrid_{tag}"
+    name = "hybrid" if tag == "none" else "hybrid_" + tag.replace("+", "")  # Kaggle strips "+" from file names
     if len(models) > 1:
         name += f"_ens{len(models)}"
     write_submission(preds, name, F.pop)

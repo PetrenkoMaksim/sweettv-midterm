@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 SRC=report/report.md
 OUT=deliverables/petrenko_maksim_midterm_report.pdf
 mkdir -p deliverables
-[ -f report/figures/kaggle_submissions.png ] || { echo "MISSING report/figures/kaggle_submissions.png (Kaggle Submissions page screenshot)"; exit 1; }
+[ -f report/figures/kaggle_submissions.jpg ] || { echo "MISSING report/figures/kaggle_submissions.jpg (Kaggle Submissions page screenshot)"; exit 1; }
 grep -q "github.com/" "$SRC" || { echo "no GitHub link in $SRC"; exit 1; }
 if grep -n -i "TODO\|FILL\|XXX" "$SRC"; then echo "placeholders left in $SRC"; exit 1; fi
 rm -f "$OUT"

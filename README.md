@@ -28,7 +28,7 @@ Every validation run appends rows to `results/attempts.csv` (all configurations 
 | `submissions/` | submission files; the designated final one is named in `results/final_choice.md` |
 
 ## Designated final submission
-`submissions/hybrid_chan+rec+rel_ens4.csv`: rank-average of four LightGBM re-rankers (binary, lambdarank, graded lambdarank,
+`submissions/hybrid_chanrecrel_ens4.csv`: rank-average of four LightGBM re-rankers (binary, lambdarank, graded lambdarank,
 Poisson) over channel-affinity-extended candidates; fold-A MAP@5 0.4319 on test users. Chosen by fold-A validation — see
 `results/final_choice.md`. Re-create it: `python src/run.py hybrid --opts chan,rel,rec --runs lambdarank:base,poisson:base,lambdarank_graded:base,binary:base`
 (~4 min, writes `results/hybrid_choice.json`), then `python src/run.py final` (~2.5 min). Score saved ensembles:
