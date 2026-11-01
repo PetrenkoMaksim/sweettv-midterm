@@ -13,3 +13,4 @@ figure, .figure { page-break-inside: avoid; }
 code { font-family: Menlo, Consolas, monospace; font-size: 8.5pt; }
 pre { font-size: 8pt; border: 1px solid #ccc; padding: 4pt; white-space: pre-wrap; }
 ol.refs { font-size: 9pt; padding-left: 18pt; }
+h2, h3 { break-after: avoid; page-break-after: avoid; }
