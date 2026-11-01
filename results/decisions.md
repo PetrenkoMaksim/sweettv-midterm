@@ -47,3 +47,12 @@ Times are MSK, 2026-11-01. Session start 13:22.
   Rerun: 58 s wall, `hybrid.csv` OK by the checker.
 - 14:53 examples: heavy viewer uid 3424 / near-cold uid 368 chosen automatically (alternatives listed in examples.md).
 - Kaggle uploads: none done by Claude Code (permission not given in PROMPT.md).
+- 14:57 Maksim asked to "try 2 highest-ROI ideas". Diagnosis: 20.9 % of truth items outside candidates, 27 % of them shows with
+  no history edges → idea 1 = channel-affinity candidate source (top-50), idea 2 = within-user relative features.
+  Hybrid artifacts are now tagged by option set (`cache/hybrid_A_<opts>.parquet`, `results/feature_importance_<opts>.csv`);
+  `hybrid_choice.json` is only overwritten by a better fold-A test MAP@5.
+- 15:00 idea 1: 0.4258 test (+0.0044); idea 2 on top: +0.0000 test / +0.0009 all. 15:03 fold-B rows in CV training: neutral
+  (0.4255). 15:04 `run.py final` → `submissions/hybrid_chan+rel.csv` (checker OK) = new designated final.
+- 15:05 Error caught while editing the report: I typed fold-B "all users" numbers (0.2479 vs 0.2408) that are not in
+  attempts.csv and drew a wrong conclusion (rules < popularity); the file says rules 0.2667 > popularity 0.2479 → fixed.
+  The same wrong "exception" was in my 14:56 chat summary.

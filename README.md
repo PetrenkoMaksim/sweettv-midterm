@@ -28,7 +28,7 @@ Every validation run appends rows to `results/attempts.csv` (all configurations 
 | `submissions/` | submission files; the designated final one is named in `results/final_choice.md` |
 
 ## Designated final submission
-`submissions/hybrid.csv` (LightGBM lambdarank re-ranker; fold-A MAP@5 0.4214 on test users). Chosen by validation before any Kaggle upload — see `results/final_choice.md`.
+`submissions/hybrid_chan+rel.csv` (LightGBM lambdarank re-ranker with channel-affinity candidates; fold-A MAP@5 0.4258 on test users). Chosen by fold-A validation — see `results/final_choice.md`. Re-create the ablation with `python src/run.py hybrid --opts none|chan|chan,rel [--quick] [--with-b]`.
 
 ## Environment
 See `results/versions.txt`.

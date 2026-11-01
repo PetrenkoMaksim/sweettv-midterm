@@ -17,7 +17,8 @@ def method_preds(F, M, users):
            "ppr": topk(methods.ppr(F, M, users, **best["ppr"]), F.cands, users, F.pop),
            "als": topk(methods.als(F, M, users, **best["als"]), F.cands, users, F.pop),
            "rules": topk(methods.rules(F, M, users, **best["rules"])[0], F.cands, users, F.pop)}
-    oof = pd.read_csv(ROOT / "cache/hybrid_A_oof.csv", index_col=0).iloc[:, 0]
+    tag = json.loads((RES / "hybrid_choice.json").read_text()).get("opts", "none")
+    oof = pd.read_csv(ROOT / f"cache/hybrid_A_oof_{tag}.csv", index_col=0).iloc[:, 0]
     out["hybrid"] = {u: [int(x) for x in oof[u].split()] for u in users}
     return out
 

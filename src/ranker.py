@@ -30,12 +30,16 @@ def predict(m, d):
     return m.predict_proba(X)[:, 1] if isinstance(m, lgb.LGBMClassifier) else m.predict(X)
 
 
-def oof(d, obj="binary", seeds=(42,)):
-    """3-fold GroupKFold by user: every user is scored by a model that never saw them."""
+def oof(d, obj="binary", seeds=(42,), extra=None):
+    """3-fold GroupKFold by user: every user is scored by a model that never saw them.
+    extra: more training rows (fold B, uid + 10**6); rows of the held-out users are dropped."""
     p = np.zeros(len(d))
     for tr, te in GroupKFold(3).split(d, groups=d.uid):
+        t = d.iloc[tr]
+        if extra is not None:
+            t = pd.concat([t, extra[~(extra.uid - 10**6).isin(set(d.uid.iloc[te]))]], ignore_index=True)
         for s in seeds:
-            p[te] += predict(fit(d.iloc[tr], obj, s), d.iloc[te]) / len(seeds)
+            p[te] += predict(fit(t, obj, s), d.iloc[te]) / len(seeds)
     return p
 
 

@@ -5,17 +5,17 @@
 Airings watched >= 80 % per show in weeks 21–30 (the truth rule counts these): {12002955: 229, 12002896: 95, 12002805: 33, 12002172: 25, 12002806: 24, 12001682: 16, 240081: 12, 200469: 8}
 
 Truth (top-5 by count, tie-break by smaller id): [12002955, 12002896, 12002805, 12002172, 12002806]
-Prediction (rank 1..5): [12001682, 12002955, 12002896, 12002856, 12002805]
+Prediction (rank 1..5): [12002955, 12002896, 12001682, 12002856, 12002805]
 
 Rule (tools/evaluate.py apk): walk the list; at each hit at rank i add (hits so far)/i; divide by min(|truth|, 5).
 
-- rank 1: 12001682 miss
-- rank 2: 12002955 hit -> +1/2
-- rank 3: 12002896 hit -> +2/3
+- rank 1: 12002955 hit -> +1/1
+- rank 2: 12002896 hit -> +2/2
+- rank 3: 12001682 miss
 - rank 4: 12002856 miss
 - rank 5: 12002805 hit -> +3/5
 
-AP@5 = 1.7667 / 5 = 0.3533 (code: 0.3533)
+AP@5 = 2.6000 / 5 = 0.5200 (code: 0.5200)
 
 ## (ii) One view record and the labelled airings it matched (from src/prep.py)
 

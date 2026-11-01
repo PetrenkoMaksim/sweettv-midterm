@@ -1,0 +1,1 @@
+fold A, users with history and truth: 4599; candidate rows 860803 (187.2/user); truth items inside candidates: 0.8428 (truth of all users with truth incl. cold: 0.8360)

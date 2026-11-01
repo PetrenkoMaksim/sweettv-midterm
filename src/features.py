@@ -6,7 +6,22 @@ import scipy.sparse as sp
 import methods
 from protocol import load
 
-TOPN = {"ppr": 30, "als": 30, "rules": 30, "pop": 20}
+TOPN = {"ppr": 30, "als": 30, "rules": 30, "pop": 20, "chan": 50, "repeat": 30}
+OPTS = {"chan", "rel"}  # v2 ideas: chan = channel-affinity candidates; rel = within-user relative features
+
+
+def chan_affinity(F, users):
+    """sum over channels of user's share of watch time on the channel x airings of the show there in the target window."""
+    v = F.views
+    s = (v.stop - v.start).clip(lower=0).values.astype(float)
+    chans = np.union1d(v.channel_id.unique(), F.sched_tgt.channel_id.unique())
+    nu = len(load()["users"])
+    Sh = sp.csr_matrix((s, (v.uid.values, np.searchsorted(chans, v.channel_id.values))), shape=(nu, len(chans)))
+    Sh = (sp.diags(1 / np.maximum(np.asarray(Sh.sum(1)).ravel(), 1)) @ Sh).tocsr()
+    st = F.sched_tgt
+    A = sp.csr_matrix((np.ones(len(st)), (np.searchsorted(chans, st.channel_id.values),
+                                          np.searchsorted(F.cands, st.tv_show_id.values))), shape=(len(chans), len(F.cands)))
+    return (Sh[users] @ A).toarray().astype(np.float32)
 
 
 def rank_rows(S):
@@ -36,12 +51,18 @@ def build(F, users, best):
     sc = {"ppr": methods.ppr(F, M, users, **best["ppr"]),
           "als": methods.als(F, M, users, **best["als"]),
           "rules": methods.rules(F, M, users, **best["rules"])[0]}
+    if "chan" in OPTS:
+        sc["chan"] = chan_affinity(F, users)
+    if "rel" in OPTS:
+        sc["repeat"] = methods.repeat(F, M, users)
     sec = M.sec[users][:, cols].toarray()
     mask = sec > 0
     rk = {}
     for k, S in sc.items():
         rk[k] = rank_rows(S)
         mask |= (rk[k] < TOPN[k]) & (S > 0)
+        if "rel" in OPTS:
+            rk[k][S <= 0] = 9999  # zero-score items have no meaningful rank
     pos = {c: i for i, c in enumerate(cands)}
     pop_cols = [pos[p] for p in F.pop[:TOPN["pop"]]]
     mask[:, pop_cols] = True
@@ -105,6 +126,10 @@ def build(F, users, best):
     tot80 = np.asarray(M.c80[users].sum(1)).ravel()
     d["user_c80_rate"] = tot80[ui] / nw
     d["user_n_shows"] = np.asarray((M.c80[users] > 0).sum(1)).ravel()[ui]
+    if "rel" in OPTS:
+        d["c80_share"] = d.c80_rate / np.maximum(d.user_c80_rate, 1e-9)
+        d["exp_rank"] = d.groupby("uid").expected.rank(ascending=False, method="first")
+        d["new_show"] = (d.air_hist_rate == 0).astype(np.int8)
 
     # method scores
     for k, S in sc.items():

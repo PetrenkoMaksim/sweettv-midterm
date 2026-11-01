@@ -58,3 +58,14 @@
 ## Next improvement
 - Raise candidate recall (0.79): e.g. add shows of the user's top channels airing in the target window and top-N by
   `expected` (share watched × airings in target window) as a candidate source.
+
+## Improvement round (15:00–15:04, results/attempts.csv rows with opts=…)
+- Diagnosis (scratch script, numbers printed in the session): 4,498 of 21,513 truth items (20.9 %) were outside the v1
+  candidates; 27.4 % of those were shows with no history edges at all (new in the target window) → unreachable for PPR/ALS/rules.
+- Idea 1, channel-affinity candidates (Σ_c user's watch-time share on c × airings of the show on c in the target window,
+  top-50): recall 0.7909 → 0.8428, MAP@5 test 0.4214 → 0.4258 (+0.0044), all 0.3813 → 0.3853. chan_rank becomes the top
+  feature (gain share 0.226).
+- Idea 2, within-user relative features (repeat score/rank, share of the user's ≥80 % airings, rank of `expected` within the
+  user, new-show flag, rank 9999 for zero scores): all +0.0009, test +0.0000 → essentially no gain.
+- Extra check: fold-B rows added to CV training (as the final model does): all 0.3873, test 0.4255 → neutral.
+- Final v2 file differs from v1 by 0.65 of 5 items per user on average (submission_overlap.txt: 4.349 shared).

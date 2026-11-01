@@ -83,6 +83,9 @@ def validate():
     hybrid_validate(best)
 
 
+RUNS = (("binary", (42,)), ("lambdarank", (42,)), ("binary", (42, 43, 44)))
+
+
 def hybrid_validate(best=None):
     best = best or json.loads(BEST.read_text())
     F = Fold("A")
@@ -91,26 +94,36 @@ def hybrid_validate(best=None):
     t = time.time()
     d, rec = features.build(F, users, best)
     tb = time.time() - t
+    tag = "+".join(sorted(features.OPTS)) or "none"
+    extra = None
+    if "--with-b" in sys.argv:  # add fold-B rows to training, as in the final model
+        FB = Fold("B")
+        extra = features.build(FB, np.intersect1d(FB.users_all, FB.hist.uid.unique()), best)[0]
+        extra["uid"] += 10**6
+        tag += "+B"
     print(f"candidates: {len(d)} rows, {len(d) / len(users):.1f} per user, recall of truth {rec:.4f} ({tb:.0f}s)")
-    (RES / "candidate_recall.txt").write_text(
+    (RES / f"candidate_recall_{tag}.txt").write_text(
         f"fold A, users with history and truth: {len(users)}; candidate rows {len(d)} "
         f"({len(d) / len(users):.1f}/user); truth items inside candidates: {rec:.4f} "
         f"(truth of all users with truth incl. cold: {d.label.sum() / sum(len(v) for v in F.truth.values()):.4f})\n")
-    d.to_parquet(RES.parent / "cache/hybrid_A.parquet")
+    d.to_parquet(RES.parent / f"cache/hybrid_A_{tag}.parquet")
     res = []
-    for obj, seeds in (("binary", (42,)), ("lambdarank", (42,)), ("binary", (42, 43, 44))):
+    for obj, seeds in RUNS:
         t = time.time()
-        p = ranker.oof(d, obj, seeds)
+        p = ranker.oof(d, obj, seeds, extra)
         preds = ranker.to_preds(d, p)
         preds = {u: fill(preds.get(u, []), F.pop) for u in F.users_all}
         a, b = F.evaluate(preds)
-        log_attempt("hybrid", f"lgbm {obj} seeds={len(seeds)} 3-fold GroupKFold", "A", a, b, time.time() - t + tb)
+        log_attempt("hybrid", f"lgbm {obj} seeds={len(seeds)} 3-fold GroupKFold opts={tag}",
+                    "A", a, b, time.time() - t + tb, f"cand_recall={rec:.4f}")
         res.append((b, a, obj, len(seeds), preds))
     b, a, obj, ns, preds = max(res, key=lambda r: r[0])
-    (RES / "hybrid_choice.json").write_text(json.dumps({"objective": obj, "n_seeds": ns, "map5_all": a, "map5_test": b}))
-    pd.Series({int(k): " ".join(map(str, v)) for k, v in preds.items()}).to_csv(RES.parent / "cache/hybrid_A_oof.csv")
+    pd.Series({int(k): " ".join(map(str, v)) for k, v in preds.items()}).to_csv(RES.parent / f"cache/hybrid_A_oof_{tag}.csv")
+    f = RES / "hybrid_choice.json"
+    if not f.exists() or json.loads(f.read_text())["map5_test"] < b:  # keep the best fold-A (test users) hybrid
+        f.write_text(json.dumps({"objective": obj, "n_seeds": ns, "opts": tag, "map5_all": a, "map5_test": b}))
     m = ranker.fit(d, "binary")
-    ranker.importance(m, d).to_csv(RES / "feature_importance.csv", header=["gain_share"])
+    ranker.importance(m, d).to_csv(RES / f"feature_importance_{tag}.csv", header=["gain_share"])
     print(ranker.importance(m, d))
 
 
@@ -125,7 +138,8 @@ def baselines():
 def final():
     best = json.loads(BEST.read_text())
     ch = json.loads((RES / "hybrid_choice.json").read_text())
-    obj, seeds = ch["objective"], (42, 43, 44)[:ch["n_seeds"]]
+    obj, seeds, tag = ch["objective"], (42, 43, 44)[:ch["n_seeds"]], ch.get("opts", "none")
+    features.OPTS = set() if tag == "none" else set(tag.split("+"))
     F = Fold("final")
     M = methods.Mat(F)
     users = F.users_all  # all 1,260 test users
@@ -136,7 +150,7 @@ def final():
             write_submission(preds, name, F.pop)
     # hybrid: train on fold A (+ fold B) candidate tables, score the final candidates
     t = time.time()
-    tr = [pd.read_parquet(RES.parent / "cache/hybrid_A.parquet")]
+    tr = [pd.read_parquet(RES.parent / f"cache/hybrid_A_{tag}.parquet")]
     FB = Fold("B")
     ub = np.intersect1d(FB.users_all, FB.hist.uid.unique())  # was a set() rebuilt per user (minutes)
     db = features.build(FB, ub, best)[0]
@@ -149,10 +163,15 @@ def final():
     p = np.mean([ranker.predict(ranker.fit(tr, obj, s), d) for s in seeds], axis=0)
     preds = ranker.to_preds(d, p)
     log_timing("hybrid", f"final fit A+B rows={len(tr)}, predict rows={len(d)}", "final", time.time() - t, len(hu))
-    write_submission(preds, "hybrid", F.pop)
+    write_submission(preds, "hybrid" if tag == "none" else f"hybrid_{tag}", F.pop)
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "validate"
+    if "--opts" in sys.argv:  # e.g. --opts chan,rel  or  --opts none
+        o = sys.argv[sys.argv.index("--opts") + 1]
+        features.OPTS = set() if o == "none" else set(o.split(","))
+    if "--quick" in sys.argv:
+        RUNS = (("lambdarank", (42,)),)
     {"validate": validate, "hybrid": hybrid_validate, "final": final, "baselines": baselines,
      "examples": lambda: __import__("examples").main()}[cmd]()
