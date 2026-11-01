@@ -1,0 +1,55 @@
+fold A: users with truth 4643, test users among them 1238, candidates 6376, history shows 7146
+popularity last_weeks=all                                fold A: MAP@5 all 0.2465  test 0.2688  (0.6s)
+popularity last_weeks=4                                  fold A: MAP@5 all 0.2747  test 0.3022  (0.4s)
+repeat                                                   fold A: MAP@5 all 0.3201  test 0.3631  (1.8s)
+ppr check 6.998404598890229e-10
+ppr        alpha=0.5 weight=logsec restart=user          fold A: MAP@5 all 0.2768  test 0.3055  (10.5s)
+ppr        alpha=0.7 weight=logsec restart=user          fold A: MAP@5 all 0.2731  test 0.2941  (11.4s)
+ppr        alpha=0.85 weight=logsec restart=user         fold A: MAP@5 all 0.2596  test 0.2778  (11.9s)
+ppr        alpha=0.5 weight=logsec restart=items         fold A: MAP@5 all 0.2489  test 0.2701  (11.6s)
+ppr        alpha=0.7 weight=logsec restart=items         fold A: MAP@5 all 0.2488  test 0.2701  (11.3s)
+ppr        alpha=0.85 weight=logsec restart=items        fold A: MAP@5 all 0.2489  test 0.2702  (11.0s)
+ppr        alpha=0.5 weight=c80 restart=user             fold A: MAP@5 all 0.3406  test 0.3809  (10.0s)
+ppr        alpha=0.7 weight=c80 restart=user             fold A: MAP@5 all 0.3460  test 0.3871  (9.9s)
+ppr        alpha=0.85 weight=c80 restart=user            fold A: MAP@5 all 0.3269  test 0.3625  (9.8s)
+ppr        alpha=0.5 weight=c80 restart=items            fold A: MAP@5 all 0.3120  test 0.3426  (10.9s)
+ppr        alpha=0.7 weight=c80 restart=items            fold A: MAP@5 all 0.3075  test 0.3386  (9.9s)
+ppr        alpha=0.85 weight=c80 restart=items           fold A: MAP@5 all 0.2875  test 0.3151  (9.9s)
+/Users/maksimpetrenko/anaconda3/lib/python3.11/site-packages/implicit/cpu/als.py:96: RuntimeWarning: OpenBLAS is configured to use 8 threads. It is highly recommended to disable its internal threadpool by setting the environment variable 'OPENBLAS_NUM_THREADS=1' or by calling 'threadpoolctl.threadpool_limits(1, "blas")'. Having OpenBLAS use a threadpool can lead to severe performance issues here.
+  check_blas_config()
+als        factors=32 reg=0.01 conf=logsec a=1.0         fold A: MAP@5 all 0.1343  test 0.1200  (5.2s)
+als        factors=32 reg=0.1 conf=logsec a=1.0          fold A: MAP@5 all 0.1348  test 0.1219  (5.0s)
+als        factors=64 reg=0.01 conf=logsec a=1.0         fold A: MAP@5 all 0.1051  test 0.0834  (6.0s)
+als        factors=64 reg=0.1 conf=logsec a=1.0          fold A: MAP@5 all 0.1065  test 0.0857  (6.0s)
+als        factors=64 reg=0.1 conf=c80 a=1.0             fold A: MAP@5 all 0.1908  test 0.1923  (2.9s)
+als        factors=64 reg=0.1 conf=logsec a=5.0          fold A: MAP@5 all 0.0538  test 0.0321  (6.0s)
+rules      min_sup=5 min_conf=0.05 agg=max self_rule=True metric=conf fold A: MAP@5 all 0.2734  test 0.2968  (2.4s)
+rules      min_sup=5 min_conf=0.05 agg=sum self_rule=True metric=conf fold A: MAP@5 all 0.2591  test 0.2812  (2.1s)
+rules      min_sup=5 min_conf=0.2 agg=max self_rule=True metric=conf fold A: MAP@5 all 0.2734  test 0.2968  (2.3s)
+rules      min_sup=5 min_conf=0.2 agg=sum self_rule=True metric=conf fold A: MAP@5 all 0.2590  test 0.2811  (2.0s)
+rules      min_sup=20 min_conf=0.05 agg=max self_rule=True metric=conf fold A: MAP@5 all 0.2739  test 0.2973  (1.8s)
+rules      min_sup=20 min_conf=0.05 agg=sum self_rule=True metric=conf fold A: MAP@5 all 0.2592  test 0.2815  (1.8s)
+rules      min_sup=20 min_conf=0.2 agg=max self_rule=True metric=conf fold A: MAP@5 all 0.2739  test 0.2973  (1.8s)
+rules      min_sup=20 min_conf=0.2 agg=sum self_rule=True metric=conf fold A: MAP@5 all 0.2591  test 0.2815  (1.7s)
+rules      min_sup=5 min_conf=0.05 agg=sum self_rule=False metric=conf fold A: MAP@5 all 0.2500  test 0.2755  (2.1s)
+rules      min_sup=5 min_conf=0.05 agg=sum self_rule=True metric=lift fold A: MAP@5 all 0.0749  test 0.0688  (2.1s)
+popularity last_weeks=all                                fold B: MAP@5 all 0.2479  test 0.2742  (0.0s)
+repeat                                                   fold B: MAP@5 all 0.3078  test 0.3413  (1.6s)
+ppr        alpha=0.7 weight=c80 restart=user             fold B: MAP@5 all 0.3236  test 0.3576  (8.0s)
+als        factors=64 reg=0.1 conf=c80 a=1.0             fold B: MAP@5 all 0.1954  test 0.2045  (2.9s)
+rules      min_sup=20 min_conf=0.2 agg=max self_rule=True metric=conf fold B: MAP@5 all 0.2667  test 0.2904  (1.9s)
+candidates: 772191 rows, 167.9 per user, recall of truth 0.7909 (18s)
+hybrid     lgbm binary seeds=1 3-fold GroupKFold         fold A: MAP@5 all 0.3794  test 0.4172  (44.0s)
+hybrid     lgbm lambdarank seeds=1 3-fold GroupKFold     fold A: MAP@5 all 0.3813  test 0.4214  (57.8s)
+hybrid     lgbm binary seeds=3 3-fold GroupKFold         fold A: MAP@5 all 0.3815  test 0.4195  (91.2s)
+ppr_rank         0.356389
+ppr_score        0.135464
+air_tgt_rate     0.081500
+expected         0.059621
+category         0.038346
+chan_share       0.033390
+sec_rate         0.032864
+air_hist_rate    0.030841
+pop_last4        0.025614
+user_c80_rate    0.024665
+dtype: float64

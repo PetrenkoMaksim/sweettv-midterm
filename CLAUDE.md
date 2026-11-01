@@ -19,7 +19,11 @@ Grading rules: `task/homework_guidelines.pdf` (Gate 0 = automatic fail). Read bo
 - Schedule: `channel_id, tv_show_id, start_time ("%d.%m.%Y %H:%M:%S"), duration (s), tv_show_title, tv_show_category, tv_show_genre_1..3,
   director, actors, year_of_production, ...` (print `df.columns` and confirm). ~1M rows per file; only ~11 % of rows / airtime are labelled.
   `tv_show_id = 0` = unlabelled airtime → not an item: drop before the join. `vsetv_id` (views) == `channel_id` (schedule).
-- Template: 1,260 users, column `tv_show_id` = 5 space-separated ids; ~1,150 of the users appear in the view log, the rest are cold.
+- Template: 1,260 users, column `tv_show_id` = 5 space-separated ids (placeholder "0 0 0 0 0").
+  **Checked 2026-11-01 (results/data_stats.txt): all 1,260 appear in the view log** (not ~1,150). Views: 5,821,987 rows, 4,914 users,
+  202 channels, `start_time` = "YYYY-MM-DD HH:MM:SS", weeks 11–30 confirmed. Schedule has an extra `channel_title` column; files overlap
+  at week borders (11-20 file spans ISO weeks 10..21) → always split by the airing's ISO week, never by file. Labelled rows ≈ 11 %,
+  labelled airtime ≈ 16–17 %.
 - Ground-truth rule published on the competition Data tab (quoted by participants; Maksim must confirm the wording on the Data tab himself):
   *"all entries with tv_show_id = 0 were removed from TV program schedule files; for each user and each TV show user screen time (time user
   watched the show divided by total duration of the show) was calculated. Only TV shows with high screen time (>= 0.8) were taken into account;

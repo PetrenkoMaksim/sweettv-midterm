@@ -1,0 +1,39 @@
+views file columns: ['user_id', 'vsetv_id', 'start_time', 'stop_time', 'duraton']
+user_id       object
+vsetv_id       int64
+start_time    object
+stop_time     object
+duraton        int64
+views rows 5,821,987  users 4,914  channels 202
+views start_time examples: ['2020-03-09 00:00:02', '2020-03-09 00:00:02', '2020-03-09 00:00:05']
+views start range 2020-03-09 00:00:02 .. 2020-07-26 23:59:58
+views ISO weeks 11..30; rows per week:
+11    407493
+12    452314
+13    465318
+14    428820
+15    412698
+16    406317
+17    417854
+18    385637
+19    336042
+20    232680
+21    182044
+22    192998
+23    162882
+24    156928
+25    138807
+26    126940
+27    105223
+28    271172
+29    261698
+30    278122
+duraton == stop-start: 1.0000; duraton quantiles [61.0, 396.0, 3911.0, 14079.139999999665, 342145.0]
+views with stop<=start: 0
+schedule columns: ['channel_id', 'channel_title', 'start_time', 'duration', 'tv_show_title', 'tv_show_id', 'tv_show_category', 'tv_show_genre_1', 'tv_show_genre_2', 'tv_show_genre_3', 'year_of_production', 'director', 'actors', 'file', 'start', 'dur', 'end']
+export_arh_11-20-final.csv: rows 1,074,235, labelled rows 115,613 (0.108), labelled airtime share 0.160, shows 5,847, channels 400, ISO weeks 10..21
+export_arh_21-30-final.csv: rows 1,074,394, labelled rows 121,505 (0.113), labelled airtime share 0.169, shows 6,363, channels 403, ISO weeks 21..31
+export_arh_31-42-final.csv: rows 1,295,378, labelled rows 144,774 (0.112), labelled airtime share 0.167, shows 6,636, channels 404, ISO weeks 31..43
+template rows 1,260, columns ['user_id', 'tv_show_id'], example ['8377619604347126107', '0 0 0 0 0']
+template users present in views: 1,260
+view channels present in schedule: 0.975

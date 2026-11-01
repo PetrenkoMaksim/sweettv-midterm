@@ -30,3 +30,7 @@ Times are MSK, 2026-11-01. Session start 13:22.
   (score 1 for the user's own shows, so repeats stay eligible).
 - ALS: `implicit` 0.7.3 imports cleanly → used (`AlternatingLeastSquares`, the matrix values are the confidences
   c = 1 + a·log(1+sec/60) or 1 + a·count80). BLAS threads limited to 1 inside fit (implicit's own warning).
+- 14:27 Maksim accepted the rules; the retry loop started the download. 65 min of the 2 h budget were lost to the block →
+  grids trimmed before seeing any real result: ALS 6 configs (factors {32,64} × reg {0.01,0.1} with log-seconds confidence,
+  + count-based confidence, + a=5), rules 10 configs, PPR full 12 (cheap closed form). Fold B only for the best config of
+  each method. CBF dropped.

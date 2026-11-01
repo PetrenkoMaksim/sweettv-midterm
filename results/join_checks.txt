@@ -1,0 +1,13 @@
+watched seconds total 8,619,636,424; landing on any airing 0.9406; on labelled airtime 0.5308; views touching a labelled airing 0.5092
+shift_h  share_|d|<=60s  share_|d|<=300s  median_|d|_s
+-3  0.0353  0.1663  1142
+-2  0.0353  0.1672  1143
+-1  0.0341  0.1622  1180
++0  0.0363  0.1721  1116
++1  0.0327  0.1569  1206
++2  0.0326  0.1543  1228
++3  0.0321  0.1533  1233
+interactions (user, labelled airing): 3,014,129; clipped by duration: 24,006; users 4,895; shows 4,363
+overlap seconds quantiles (5,25,50,75,95,99%): [68.0, 213.0, 712.0, 1991.0, 5744.0, 8019.0]
+frac quantiles (5,25,50,75,95%): [0.011, 0.044, 0.195, 0.659, 1.0]; share frac>=0.8: 0.2044
+airing durations with dur<=0: 0

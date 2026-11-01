@@ -1,0 +1,35 @@
+method,config,fold,fit_predict_s,n_users_scored
+repeat,,A,1.8,4643
+ppr,alpha=0.5 weight=logsec restart=user,A,10.5,4643
+ppr,alpha=0.7 weight=logsec restart=user,A,11.4,4643
+ppr,alpha=0.85 weight=logsec restart=user,A,11.9,4643
+ppr,alpha=0.5 weight=logsec restart=items,A,11.6,4643
+ppr,alpha=0.7 weight=logsec restart=items,A,11.3,4643
+ppr,alpha=0.85 weight=logsec restart=items,A,11.0,4643
+ppr,alpha=0.5 weight=c80 restart=user,A,10.0,4643
+ppr,alpha=0.7 weight=c80 restart=user,A,9.9,4643
+ppr,alpha=0.85 weight=c80 restart=user,A,9.8,4643
+ppr,alpha=0.5 weight=c80 restart=items,A,10.9,4643
+ppr,alpha=0.7 weight=c80 restart=items,A,9.9,4643
+ppr,alpha=0.85 weight=c80 restart=items,A,9.9,4643
+als,factors=32 reg=0.01 conf=logsec a=1.0,A,5.2,4643
+als,factors=32 reg=0.1 conf=logsec a=1.0,A,5.0,4643
+als,factors=64 reg=0.01 conf=logsec a=1.0,A,6.0,4643
+als,factors=64 reg=0.1 conf=logsec a=1.0,A,6.0,4643
+als,factors=64 reg=0.1 conf=c80 a=1.0,A,2.9,4643
+als,factors=64 reg=0.1 conf=logsec a=5.0,A,6.0,4643
+rules,min_sup=5 min_conf=0.05 agg=max self_rule=True metric=conf,A,2.4,4643
+rules,min_sup=5 min_conf=0.05 agg=sum self_rule=True metric=conf,A,2.1,4643
+rules,min_sup=5 min_conf=0.2 agg=max self_rule=True metric=conf,A,2.3,4643
+rules,min_sup=5 min_conf=0.2 agg=sum self_rule=True metric=conf,A,2.0,4643
+rules,min_sup=20 min_conf=0.05 agg=max self_rule=True metric=conf,A,1.8,4643
+rules,min_sup=20 min_conf=0.05 agg=sum self_rule=True metric=conf,A,1.8,4643
+rules,min_sup=20 min_conf=0.2 agg=max self_rule=True metric=conf,A,1.8,4643
+rules,min_sup=20 min_conf=0.2 agg=sum self_rule=True metric=conf,A,1.7,4643
+rules,min_sup=5 min_conf=0.05 agg=sum self_rule=False metric=conf,A,2.1,4643
+rules,min_sup=5 min_conf=0.05 agg=sum self_rule=True metric=lift,A,2.1,4643
+repeat,,B,1.6,4569
+ppr,alpha=0.7 weight=c80 restart=user,B,8.0,4569
+als,factors=64 reg=0.1 conf=c80 a=1.0,B,2.9,4569
+rules,min_sup=20 min_conf=0.2 agg=max self_rule=True metric=conf,B,1.9,4569
+hybrid,"final fit A+B rows=1600782, predict rows=400212",final,54.0,1258

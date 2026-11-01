@@ -16,12 +16,12 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 BEST = RES / "best_configs.json"
 PPR_GRID = [dict(alpha=a, weight=w, restart=r) for w in ("logsec", "c80") for r in ("user", "items")
             for a in (0.5, 0.7, 0.85)]
-ALS_GRID = [dict(factors=f, reg=r, conf=c, a=a) for c, a in (("logsec", 1.0), ("c80", 1.0), ("logsec", 5.0))
-            for f in (32, 64) for r in (0.01, 0.1)]
-RULES_GRID = [dict(min_sup=s, min_conf=c, agg=g, self_rule=sr, metric=m) for s in (5, 20) for c in (0.05, 0.2)
-              for g in ("max", "sum") for sr in (True, False) for m in ("conf",)] + \
-             [dict(min_sup=20, min_conf=0.05, agg="sum", self_rule=True, metric="lift")]
-
+ALS_GRID = [dict(factors=f, reg=r, conf="logsec", a=1.0) for f in (32, 64) for r in (0.01, 0.1)] + \
+           [dict(factors=64, reg=0.1, conf="c80", a=1.0), dict(factors=64, reg=0.1, conf="logsec", a=5.0)]
+RULES_GRID = [dict(min_sup=s, min_conf=c, agg=g, self_rule=True, metric="conf") for s in (5, 20) for c in (0.05, 0.2)
+              for g in ("max", "sum")] + \
+             [dict(min_sup=5, min_conf=0.05, agg="sum", self_rule=False, metric="conf"),
+              dict(min_sup=5, min_conf=0.05, agg="sum", self_rule=True, metric="lift")]
 
 def cfg_str(c):
     return " ".join(f"{k}={v}" for k, v in c.items())
@@ -87,7 +87,7 @@ def hybrid_validate(best=None):
     best = best or json.loads(BEST.read_text())
     F = Fold("A")
     hist_users = np.array(sorted(set(F.hist.uid)))
-    users = np.array([u for u in F.users_all if u in set(hist_users)])
+    users = np.intersect1d(F.users_all, hist_users)
     t = time.time()
     d, rec = features.build(F, users, best)
     tb = time.time() - t
@@ -114,6 +114,14 @@ def hybrid_validate(best=None):
     print(ranker.importance(m, d))
 
 
+def baselines():
+    """Quick safety net: popularity + repeat submissions for the real test window."""
+    F = Fold("final")
+    M = methods.Mat(F)
+    write_submission({u: F.pop[:5] for u in F.users_all}, "popularity", F.pop)
+    write_submission(run_method(F, M, "repeat", {}, F.users_all, log=False)[0], "repeat", F.pop)
+
+
 def final():
     best = json.loads(BEST.read_text())
     ch = json.loads((RES / "hybrid_choice.json").read_text())
@@ -121,19 +129,23 @@ def final():
     F = Fold("final")
     M = methods.Mat(F)
     users = F.users_all  # all 1,260 test users
-    write_submission({u: F.pop[:5] for u in users}, "popularity", F.pop)
-    for name in ("repeat", "ppr", "als", "rules"):
-        preds, _ = run_method(F, M, name, best.get(name, {}), users, log=False)
-        write_submission(preds, name, F.pop)
+    if "singles" in sys.argv:
+        write_submission({u: F.pop[:5] for u in users}, "popularity", F.pop)
+        for name in ("repeat", "ppr", "als", "rules"):
+            preds, _ = run_method(F, M, name, best.get(name, {}), users, log=False)
+            write_submission(preds, name, F.pop)
     # hybrid: train on fold A (+ fold B) candidate tables, score the final candidates
     t = time.time()
     tr = [pd.read_parquet(RES.parent / "cache/hybrid_A.parquet")]
     FB = Fold("B")
-    ub = np.array([u for u in FB.users_all if u in set(FB.hist.uid)])
-    tr.append(features.build(FB, ub, best)[0])
+    ub = np.intersect1d(FB.users_all, FB.hist.uid.unique())  # was a set() rebuilt per user (minutes)
+    db = features.build(FB, ub, best)[0]
+    db["uid"] += 10**6  # separate lambdarank queries for the same user in fold A and fold B
+    tr.append(db)
     tr = pd.concat(tr, ignore_index=True)
-    hu = np.array([u for u in users if u in set(F.hist.uid)])
+    hu = np.intersect1d(users, F.hist.uid.unique())
     d, _ = features.build(F, hu, best)
+    print(f"train rows {len(tr)}, predict rows {len(d)}, {time.time() - t:.0f}s", flush=True)
     p = np.mean([ranker.predict(ranker.fit(tr, obj, s), d) for s in seeds], axis=0)
     preds = ranker.to_preds(d, p)
     log_timing("hybrid", f"final fit A+B rows={len(tr)}, predict rows={len(d)}", "final", time.time() - t, len(hu))
@@ -142,5 +154,5 @@ def final():
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "validate"
-    {"validate": validate, "hybrid": hybrid_validate, "final": final,
+    {"validate": validate, "hybrid": hybrid_validate, "final": final, "baselines": baselines,
      "examples": lambda: __import__("examples").main()}[cmd]()
