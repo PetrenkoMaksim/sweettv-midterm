@@ -34,5 +34,5 @@ Arithmetic: overlap = min(view stop, airing end) − max(view start, airing star
 
 ```
 python src/prep.py      # ~1–2 min, builds cache/
-python src/run.py validate   # rewrites results/attempts.csv rows (appends)
+python src/run.py validate   # appends a new block of rows to results/attempts.csv; compare with the existing rows
 ```

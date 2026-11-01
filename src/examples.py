@@ -91,7 +91,7 @@ def write_hand_check(u, pred, tr, F):
     L += [(RES / "hand_check_join.md").read_text(), "",
           "Arithmetic: overlap = min(view stop, airing end) − max(view start, airing start); frac = overlap / airing duration.", "",
           "## (iii) Re-run the fold-A table", "", "```", "python src/prep.py      # ~1–2 min, builds cache/",
-          "python src/run.py validate   # rewrites results/attempts.csv rows (appends)", "```"]
+          "python src/run.py validate   # appends a new block of rows to results/attempts.csv; compare with the existing rows", "```"]
     (RES / "hand_check.md").write_text("\n".join(L) + "\n")
 
 
