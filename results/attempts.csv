@@ -41,3 +41,24 @@ time,method,config,fold,map5_all,map5_test,fit_predict_s,note
 14:59:37,hybrid,lgbm lambdarank seeds=1 3-fold GroupKFold opts=chan,A,0.38531,0.42579,63.0,cand_recall=0.8428
 15:00:48,hybrid,lgbm lambdarank seeds=1 3-fold GroupKFold opts=chan+rel,A,0.38619,0.42580,58.8,cand_recall=0.8428
 15:03:02,hybrid,lgbm lambdarank seeds=1 3-fold GroupKFold opts=chan+rel+B,A,0.38731,0.42553,79.6,cand_recall=0.8428
+15:21:15,hybrid,lgbm lambdarank base seeds=1 3-fold GroupKFold opts=chan+rec+rel,A,0.38508,0.42320,61.0,cand_recall=0.8428
+15:21:49,hybrid,lgbm poisson base seeds=1 3-fold GroupKFold opts=chan+rec+rel,A,0.38095,0.42126,55.2,cand_recall=0.8428
+15:22:29,hybrid,lgbm lambdarank_graded base seeds=1 3-fold GroupKFold opts=chan+rec+rel,A,0.38438,0.42481,62.7,cand_recall=0.8428
+15:22:57,hybrid,lgbm binary base seeds=1 3-fold GroupKFold opts=chan+rec+rel,A,0.38563,0.42187,49.1,cand_recall=0.8428
+15:22:58,hybrid,rank-avg ensemble of 4 runs opts=chan+rec+rel,A,0.39028,0.43190,0.0,cand_recall=0.8428
+15:24:28,hybrid,lgbm lambdarank base seeds=1 3-fold GroupKFold opts=chan+rel,A,0.38619,0.42580,64.0,cand_recall=0.8428
+15:24:54,hybrid,lgbm poisson base seeds=1 3-fold GroupKFold opts=chan+rel,A,0.37880,0.41924,47.7,cand_recall=0.8428
+15:25:38,hybrid,lgbm lambdarank_graded base seeds=1 3-fold GroupKFold opts=chan+rel,A,0.38229,0.42304,64.8,cand_recall=0.8428
+15:25:59,hybrid,lgbm binary base seeds=1 3-fold GroupKFold opts=chan+rel,A,0.38256,0.42051,42.6,cand_recall=0.8428
+15:28:19,hybrid,lgbm lambdarank big seeds=1 3-fold GroupKFold opts=chan+rel,A,0.37707,0.41659,161.4,cand_recall=0.8428
+15:29:50,hybrid,lgbm binary big seeds=1 3-fold GroupKFold opts=chan+rel,A,0.38075,0.41875,111.5,cand_recall=0.8428
+15:29:51,hybrid,rank-avg ensemble of 6 runs opts=chan+rel,A,0.38754,0.42778,0.0,cand_recall=0.8428
+15:30:17,hybrid,"rank-avg [lambdarank:base,poisson:base,lambdarank_graded:base,binary:base] opts=chan+rel",A,0.38859,0.42917,0.0,cand_recall=0.8428
+15:30:18,hybrid,"rank-avg [lambdarank:base,lambdarank_graded:base,binary:base] opts=chan+rel",A,0.38700,0.42565,0.0,cand_recall=0.8428
+15:30:19,hybrid,"rank-avg [lambdarank:base,lambdarank_graded:base] opts=chan+rel",A,0.38570,0.42641,0.0,cand_recall=0.8428
+15:30:19,hybrid,"rank-avg [lambdarank:base,poisson:base] opts=chan+rel",A,0.38783,0.42989,0.0,cand_recall=0.8428
+15:31:44,hybrid,lgbm lambdarank base seeds=1 3-fold GroupKFold opts=chan100+rec+rel,A,0.38494,0.42464,68.5,cand_recall=0.8662
+15:32:23,hybrid,lgbm poisson base seeds=1 3-fold GroupKFold opts=chan100+rec+rel,A,0.37886,0.41766,60.6,cand_recall=0.8662
+15:33:12,hybrid,lgbm lambdarank_graded base seeds=1 3-fold GroupKFold opts=chan100+rec+rel,A,0.38341,0.42208,70.6,cand_recall=0.8662
+15:33:38,hybrid,lgbm binary base seeds=1 3-fold GroupKFold opts=chan100+rec+rel,A,0.38217,0.41909,47.4,cand_recall=0.8662
+15:33:39,hybrid,rank-avg ensemble of 4 runs opts=chan100+rec+rel,A,0.38933,0.42817,0.0,cand_recall=0.8662

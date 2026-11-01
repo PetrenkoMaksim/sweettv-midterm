@@ -7,7 +7,8 @@ import methods
 from protocol import load
 
 TOPN = {"ppr": 30, "als": 30, "rules": 30, "pop": 20, "chan": 50, "repeat": 30}
-OPTS = {"chan", "rel"}  # v2 ideas: chan = channel-affinity candidates; rel = within-user relative features
+OPTS = {"chan", "rel"}  # chan = channel-affinity candidates (chan100: top-100); rel = within-user relative features;
+# rec = recency-decayed history features
 
 
 def chan_affinity(F, users):
@@ -51,10 +52,11 @@ def build(F, users, best):
     sc = {"ppr": methods.ppr(F, M, users, **best["ppr"]),
           "als": methods.als(F, M, users, **best["als"]),
           "rules": methods.rules(F, M, users, **best["rules"])[0]}
-    if "chan" in OPTS:
+    if "chan" in OPTS or "chan100" in OPTS:
         sc["chan"] = chan_affinity(F, users)
     if "rel" in OPTS:
         sc["repeat"] = methods.repeat(F, M, users)
+    TOPN["chan"] = 100 if "chan100" in OPTS else 50
     sec = M.sec[users][:, cols].toarray()
     mask = sec > 0
     rk = {}
@@ -85,6 +87,17 @@ def build(F, users, best):
     agg = g.groupby(["uid", "tv_show_id"]).agg(n_days=("day", "nunique"), last_wk=("week", "max"))
     d = d.join(agg, on=["uid", "tv_show_id"])
     d["n_days"] = d.n_days.fillna(0) / nw
+    if "rec" in OPTS:  # half-life 1 and 3 weeks, last week only, seconds of the last 4 weeks
+        for hl in (1, 3):
+            w = g.assign(w=0.5 ** ((F.h1 - g.week) / hl)).groupby(["uid", "tv_show_id"]).w.sum().rename(f"c80_decay{hl}")
+            d = d.join(w, on=["uid", "tv_show_id"])
+            d[f"c80_decay{hl}"] = d[f"c80_decay{hl}"].fillna(0)
+        l1 = g[g.week == F.h1].groupby(["uid", "tv_show_id"]).size().rename("c80_last1")
+        s4 = h[h.week > F.h1 - 4].groupby(["uid", "tv_show_id"]).ov.sum().rename("sec_last4")
+        u4 = g[g.week > F.h1 - 4].groupby("uid").size()
+        d = d.join(l1, on=["uid", "tv_show_id"]).join(s4, on=["uid", "tv_show_id"])
+        d[["c80_last1", "sec_last4"]] = d[["c80_last1", "sec_last4"]].fillna(0)
+        d["user_c80_last4"] = d.uid.map(u4).fillna(0).values
     d["weeks_since"] = (F.h1 - d.last_wk).fillna(99)
     d = d.drop(columns="last_wk")
 
@@ -141,5 +154,8 @@ def build(F, users, best):
     if F.truth:
         tr = set((uu, s) for uu in users for s in F.truth.get(uu, []))
         d["label"] = [int((a, b) in tr) for a, b in zip(d.uid.values, d.tv_show_id.values)]
+        t80 = F.tgt[F.tgt.frac >= 0.8].groupby(["uid", "tv_show_id"]).size().rename("cnt")
+        d = d.join(t80, on=["uid", "tv_show_id"])
+        d["cnt"] = d.cnt.fillna(0)
         rec = d.label.sum() / max(len(tr), 1)
     return d, rec

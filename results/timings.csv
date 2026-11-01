@@ -34,3 +34,4 @@ als,factors=64 reg=0.1 conf=c80 a=1.0,B,2.9,4569
 rules,min_sup=20 min_conf=0.2 agg=max self_rule=True metric=conf,B,1.9,4569
 hybrid,"final fit A+B rows=1600782, predict rows=400212",final,54.0,1258
 hybrid,"final fit A+B rows=1769870, predict rows=417685",final,61.6,1258
+hybrid,"final fit A+B rows=1769870, predict rows=417685",final,136.6,1258

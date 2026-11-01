@@ -4,3 +4,6 @@ mean overlap of 5: hybrid-ppr 3.796031746031746 hybrid-repeat 3.396031746031746 
 1  8381667675275833309        2400480 240081 12001682 20088 12001734
 2  8387147770138767246  12001682 12002856 12001732 12002955 12002771
 mean overlap hybrid_chan+rel vs hybrid (of 5): 4.349
+mean overlap hybrid_chan+rec+rel_ens4 vs hybrid_chan+rel (of 5): 4.533
+mean overlap hybrid_chan+rec+rel_ens4 vs hybrid (of 5): 4.329
+mean overlap hybrid_chan+rec+rel_ens4 vs ppr (of 5): 3.782

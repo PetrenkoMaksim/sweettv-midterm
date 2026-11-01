@@ -42,6 +42,7 @@ class Fold:
         self.n_tgt_weeks = t1 - t0 + 1
         self.cands = np.sort(self.sched_tgt.tv_show_id.unique())
         tgt = it[(it.week >= t0) & (it.week <= t1)]
+        self.tgt = tgt
         self.truth = make_truth(tgt.rename(columns={"uid": "user_id"})) if len(tgt) else {}
         test = set(d["users"].uid[d["users"].test])
         self.users_all = np.array(sorted(self.truth)) if self.truth else np.array(sorted(test))

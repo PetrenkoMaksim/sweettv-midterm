@@ -69,3 +69,18 @@
   user, new-show flag, rank 9999 for zero scores): all +0.0009, test +0.0000 → essentially no gain.
 - Extra check: fold-B rows added to CV training (as the final model does): all 0.3873, test 0.4255 → neutral.
 - Final v2 file differs from v1 by 0.65 of 5 items per user on average (submission_overlap.txt: 4.349 shared).
+
+## Improvement round 2 (15:20–15:34; attempts.csv rows 44–64)
+- Objectives alone (feature set chan+rec+rel, test users): lambdarank 0.4232, graded lambdarank 0.4248, binary 0.4219,
+  Poisson on the target count 0.4213 → none beats lambdarank chan+rel (0.4258).
+- Rank-average of the four: 0.4319 test / 0.3903 all → +0.006 / +0.004 over the best single model. The gain repeats on the
+  other feature sets (chan+rel 0.4292, chan100+rec+rel 0.4282); lambdarank + Poisson alone already 0.4299 → the Poisson
+  model (fits the count, not membership) is the most complementary member.
+- Recency features: no gain alone (0.4232 vs 0.4258), but the ensemble on that table is the best.
+- Bigger LightGBM (1,000 trees, lr 0.03, 127 leaves): worse (lambdarank 0.4166, binary 0.4188) and 2.5× slower.
+- Channel top-100 candidates: recall 0.8428 → 0.8662 but MAP@5 not higher (ensemble 0.4282) — the extra candidates are
+  low-probability items the ranker rarely lifts into the top 5.
+- Reproducibility: the chan+rel lambdarank run repeated at 15:24 gave exactly 0.38619 / 0.42580 as at 15:00.
+- Final ensemble: 136.6 s fit+predict (4 models on 1,769,870 rows), vs 61.6 s for the single lambdarank.
+- Noise caveat: 1,238 test users → differences of a few 0.001 are not meaningful; only the ensemble gain (+0.006, repeated on
+  three feature sets) is consistent.

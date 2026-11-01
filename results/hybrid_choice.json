@@ -1,1 +1,1 @@
-{"objective": "lambdarank", "n_seeds": 1, "opts": "chan+rel", "map5_all": 0.38618996338574196, "map5_test": 0.4257969843834141}
+{"models": [["lambdarank", 1, "base"], ["poisson", 1, "base"], ["lambdarank_graded", 1, "base"], ["binary", 1, "base"]], "opts": "chan+rec+rel", "map5_all": 0.3902807093115083, "map5_test": 0.4319047298510142}

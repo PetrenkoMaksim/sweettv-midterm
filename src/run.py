@@ -83,7 +83,37 @@ def validate():
     hybrid_validate(best)
 
 
-RUNS = (("binary", (42,)), ("lambdarank", (42,)), ("binary", (42, 43, 44)))
+RUNS = [("binary", (42,), "base"), ("lambdarank", (42,), "base"), ("binary", (42, 43, 44), "base")]
+
+
+def score(F, d, p, cfg, secs, rec, models):
+    preds = ranker.to_preds(d, p)
+    preds = {u: fill(preds.get(u, []), F.pop) for u in F.users_all}
+    a, b = F.evaluate(preds)
+    log_attempt("hybrid", cfg, "A", a, b, secs, f"cand_recall={rec:.4f}")
+    return b, a, models, preds
+
+
+def save_choice(res, tag):
+    """Keep the best fold-A (test users) hybrid in results/hybrid_choice.json (+ its OOF Top-5 for examples.py)."""
+    b, a, models, preds = max(res, key=lambda r: r[0])
+    f = RES / "hybrid_choice.json"
+    if not f.exists() or json.loads(f.read_text())["map5_test"] < b:
+        f.write_text(json.dumps({"models": models, "opts": tag, "map5_all": a, "map5_test": b}))
+        pd.Series({int(k): " ".join(map(str, v)) for k, v in preds.items()}).to_csv(RES.parent / f"cache/hybrid_A_oof_{tag}.csv")
+
+
+def ensemble():
+    """python src/run.py ens <opts tag> obj:size,obj:size [...more combos]  (rank-average of saved OOF scores)"""
+    tag, F = sys.argv[2], Fold("A")
+    d = pd.read_parquet(RES.parent / f"cache/hybrid_A_{tag}.parquet")
+    rec = d.label.sum() / sum(len(F.truth[u]) for u in d.uid.unique())
+    res = []
+    for combo in sys.argv[3:]:
+        ms = [c.split(":") for c in combo.split(",")]
+        ps = [np.load(RES.parent / f"cache/oof_{tag}_{o}_{z}.npy") for o, z in ms]
+        res.append(score(F, d, ranker.rank_avg(d, ps), f"rank-avg [{combo}] opts={tag}", 0, rec, [[o, 1, z] for o, z in ms]))
+    save_choice(res, tag)
 
 
 def hybrid_validate(best=None):
@@ -107,21 +137,18 @@ def hybrid_validate(best=None):
         f"({len(d) / len(users):.1f}/user); truth items inside candidates: {rec:.4f} "
         f"(truth of all users with truth incl. cold: {d.label.sum() / sum(len(v) for v in F.truth.values()):.4f})\n")
     d.to_parquet(RES.parent / f"cache/hybrid_A_{tag}.parquet")
-    res = []
-    for obj, seeds in RUNS:
+    res, ps = [], []
+    for obj, seeds, size in RUNS:
         t = time.time()
-        p = ranker.oof(d, obj, seeds, extra)
-        preds = ranker.to_preds(d, p)
-        preds = {u: fill(preds.get(u, []), F.pop) for u in F.users_all}
-        a, b = F.evaluate(preds)
-        log_attempt("hybrid", f"lgbm {obj} seeds={len(seeds)} 3-fold GroupKFold opts={tag}",
-                    "A", a, b, time.time() - t + tb, f"cand_recall={rec:.4f}")
-        res.append((b, a, obj, len(seeds), preds))
-    b, a, obj, ns, preds = max(res, key=lambda r: r[0])
-    pd.Series({int(k): " ".join(map(str, v)) for k, v in preds.items()}).to_csv(RES.parent / f"cache/hybrid_A_oof_{tag}.csv")
-    f = RES / "hybrid_choice.json"
-    if not f.exists() or json.loads(f.read_text())["map5_test"] < b:  # keep the best fold-A (test users) hybrid
-        f.write_text(json.dumps({"objective": obj, "n_seeds": ns, "opts": tag, "map5_all": a, "map5_test": b}))
+        p = ranker.oof(d, obj, seeds, extra, size)
+        ps.append(p)
+        np.save(RES.parent / f"cache/oof_{tag}_{obj}_{size}.npy", p)
+        res.append(score(F, d, p, f"lgbm {obj} {size} seeds={len(seeds)} 3-fold GroupKFold opts={tag}",
+                         time.time() - t + tb, rec, [[obj, len(seeds), size]]))
+    if len(ps) > 1:  # rank-average ensemble of all runs above
+        res.append(score(F, d, ranker.rank_avg(d, ps), f"rank-avg ensemble of {len(ps)} runs opts={tag}", 0, rec,
+                         [[o, len(s), z] for o, s, z in RUNS]))
+    save_choice(res, tag)
     m = ranker.fit(d, "binary")
     ranker.importance(m, d).to_csv(RES / f"feature_importance_{tag}.csv", header=["gain_share"])
     print(ranker.importance(m, d))
@@ -138,7 +165,8 @@ def baselines():
 def final():
     best = json.loads(BEST.read_text())
     ch = json.loads((RES / "hybrid_choice.json").read_text())
-    obj, seeds, tag = ch["objective"], (42, 43, 44)[:ch["n_seeds"]], ch.get("opts", "none")
+    models = ch.get("models", [[ch.get("objective"), ch.get("n_seeds"), "base"]])
+    tag = ch.get("opts", "none")
     features.OPTS = set() if tag == "none" else set(tag.split("+"))
     F = Fold("final")
     M = methods.Mat(F)
@@ -160,10 +188,14 @@ def final():
     hu = np.intersect1d(users, F.hist.uid.unique())
     d, _ = features.build(F, hu, best)
     print(f"train rows {len(tr)}, predict rows {len(d)}, {time.time() - t:.0f}s", flush=True)
-    p = np.mean([ranker.predict(ranker.fit(tr, obj, s), d) for s in seeds], axis=0)
+    ps = [np.mean([ranker.predict(ranker.fit(tr, o, s, z), d) for s in (42, 43, 44)[:n]], axis=0) for o, n, z in models]
+    p = ranker.rank_avg(d, ps) if len(ps) > 1 else ps[0]
     preds = ranker.to_preds(d, p)
     log_timing("hybrid", f"final fit A+B rows={len(tr)}, predict rows={len(d)}", "final", time.time() - t, len(hu))
-    write_submission(preds, "hybrid" if tag == "none" else f"hybrid_{tag}", F.pop)
+    name = "hybrid" if tag == "none" else f"hybrid_{tag}"
+    if len(models) > 1:
+        name += f"_ens{len(models)}"
+    write_submission(preds, name, F.pop)
 
 
 if __name__ == "__main__":
@@ -171,7 +203,9 @@ if __name__ == "__main__":
     if "--opts" in sys.argv:  # e.g. --opts chan,rel  or  --opts none
         o = sys.argv[sys.argv.index("--opts") + 1]
         features.OPTS = set() if o == "none" else set(o.split(","))
+    if "--runs" in sys.argv:  # e.g. --runs lambdarank:base,poisson:big  (1 seed each)
+        RUNS = [(r.split(":")[0], (42,), r.split(":")[1]) for r in sys.argv[sys.argv.index("--runs") + 1].split(",")]
     if "--quick" in sys.argv:
-        RUNS = (("lambdarank", (42,)),)
-    {"validate": validate, "hybrid": hybrid_validate, "final": final, "baselines": baselines,
+        RUNS = [("lambdarank", (42,), "base")]
+    {"validate": validate, "hybrid": hybrid_validate, "final": final, "baselines": baselines, "ens": ensemble,
      "examples": lambda: __import__("examples").main()}[cmd]()

@@ -56,3 +56,10 @@ Times are MSK, 2026-11-01. Session start 13:22.
 - 15:05 Error caught while editing the report: I typed fold-B "all users" numbers (0.2479 vs 0.2408) that are not in
   attempts.csv and drew a wrong conclusion (rules < popularity); the file says rules 0.2667 > popularity 0.2479 → fixed.
   The same wrong "exception" was in my 14:56 chat summary.
+- 15:06 Maksim: "Try more ideas … time budget 1 hour". Implemented as flags: objectives poisson (target = count of ≥80 %
+  airings in the target window, stored as `cnt`, never a feature) and lambdarank_graded; LightGBM size "big"; recency
+  features (opt rec); channel top-100 (opt chan100); rank-average ensemble; `run.py ens` scores subsets from saved OOF scores.
+- 15:23 chan+rec+rel, 4 objectives: singles ≤ 0.4248, ensemble 0.4319 (best). 15:30 chan+rel with big models: big worse;
+  ensembles 0.4278 (6 runs) / 0.4292 (4 base). 15:34 chan100+rec+rel: ensemble 0.4282. Stopped experimenting at 15:34.
+- 15:36 `run.py final` → ensemble of 4 on chan+rec+rel, 136.6 s, checker OK → renamed to `hybrid_chan+rec+rel_ens4.csv`
+  (naming code shortened afterwards); new designated final.
