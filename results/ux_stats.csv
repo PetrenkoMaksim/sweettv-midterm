@@ -1,0 +1,9 @@
+file,distinct_shows,share_watched80_before,share_never_watched,share_in_pop_top20
+als.csv,157,0.944,0.021,0.658
+hybrid.csv,115,0.892,0.02,0.775
+hybrid_chan+rec+rel_ens4.csv,112,0.892,0.028,0.761
+hybrid_chan+rel.csv,133,0.891,0.024,0.77
+popularity.csv,5,0.726,0.103,1.0
+ppr.csv,190,0.938,0.029,0.795
+repeat.csv,438,0.988,0.002,0.632
+rules.csv,150,0.988,0.008,0.944

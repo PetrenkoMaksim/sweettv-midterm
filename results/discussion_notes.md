@@ -84,3 +84,18 @@
 - Final ensemble: 136.6 s fit+predict (4 models on 1,769,870 rows), vs 61.6 s for the single lambdarank.
 - Noise caveat: 1,238 test users → differences of a few 0.001 are not meaningful; only the ensemble gain (+0.006, repeated on
   three feature sets) is consistent.
+
+## UX / business facts (results/ux_stats.csv, results/truth_repeat_share.txt; computed on the submitted files, 1,260 users)
+- Share of Top-5 slots that are shows the user already watched ≥ 80 % in weeks 11–30: hybrid ens4 0.892, PPR 0.938,
+  ALS 0.944, rules 0.988, repeat 0.988, popularity 0.726.
+- Share of slots the user never touched (pure discovery): hybrid ens4 0.028, PPR 0.029, ALS 0.021, repeat 0.002, popularity 0.103.
+- Catalogue coverage (distinct shows over all 1,260 lists): popularity 5, hybrid ens4 112, rules 150, ALS 157, PPR 190, repeat 438.
+- Share of slots in the global top-20 popularity list: rules 0.944, PPR 0.795, hybrid ens4 0.761, ALS 0.658, repeat 0.632.
+- Ground truth (fold A): only 54.4 % of a user's future top-5 had been watched ≥ 80 % before, 71.5 % touched at all, 28.5 %
+  never touched → the models (≈ 89–99 % repeats) are more repeat-heavy than the users; the missing ~28 % of "new" favourites
+  is where the remaining MAP is (and where a discovery slot in the UI would help).
+- Cost for a weekly batch: final hybrid 136.6 s for 1,258 users incl. fitting (timings.csv); PPR 9.9 s for 4,643 users;
+  popularity < 1 s — all are offline batch jobs, no per-request latency concern at this scale.
+
+## Discussion length budget (measured by rendering the report with a placeholder Discussion and screenshot)
+- ≤ ~700 words in §5 keeps all content before "References" within 5 pages; at 900 words it reaches the limit.

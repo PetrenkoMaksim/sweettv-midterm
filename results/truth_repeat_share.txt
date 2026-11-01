@@ -1,0 +1,1 @@
+fold A truth items (weeks 21-30, 21690 user-show pairs): watched >=80 % in weeks 11-20 0.544; touched at all in weeks 11-20 0.715; never touched 0.285

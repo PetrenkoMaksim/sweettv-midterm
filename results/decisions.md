@@ -63,3 +63,9 @@ Times are MSK, 2026-11-01. Session start 13:22.
   ensembles 0.4278 (6 runs) / 0.4292 (4 base). 15:34 chan100+rec+rel: ensemble 0.4282. Stopped experimenting at 15:34.
 - 15:36 `run.py final` → ensemble of 4 on chan+rec+rel, 136.6 s, checker OK → renamed to `hybrid_chan+rec+rel_ens4.csv`
   (naming code shortened afterwards); new designated final.
+- 16:11 Maksim shared the requirements Google Slides; exported as PDF/text: byte-identical to task/midterm_quiz.pdf
+  (same SHA-1). Audit → gaps fixed: (1) the per-method Top-5 tables for the two users (IDs, titles, categories) were only in
+  results/, now Table 3 in the report (generated: results/examples_table.md); (2) UX facts added (results/ux_stats.csv,
+  truth_repeat_share.txt); (3) the report states which programme metadata is used. Report trimmed and measured: with a
+  700-word Discussion and the screenshot, content stays ≤ 5 pages. Reference italics fixed (HTML list, text unchanged).
+  Checklist: results/deliverables_checklist.md.
