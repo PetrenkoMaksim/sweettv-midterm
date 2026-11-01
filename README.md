@@ -1,5 +1,7 @@
 # sweet.tv TV-programme recommender — LLM4Rec midterm (Maksim Petrenko)
 
+Repository: https://github.com/PetrenkoMaksim/sweettv-midterm · Kaggle user: underqualified · designated final: `submissions/hybrid_chanrecrel_ens4.csv` (Kaggle private 0.44826, public 0.45214).
+
 Top-5 TV programmes per user for ISO weeks 31–42 of 2020 from the channel-viewing log of weeks 11–30 and the programme
 schedule (Kaggle community competition `sweettv-tv-program-recommender`, metric MAP@5).
 
@@ -35,4 +37,4 @@ Poisson) over channel-affinity-extended candidates; fold-A MAP@5 0.4319 on test 
 `python src/run.py ens <opts> obj:size,obj:size`.
 
 ## Environment
-See `results/versions.txt`.
+See `results/versions.txt`. The course PDFs (`task/`) and the competition data (`data/`, `cache/`) are not included.

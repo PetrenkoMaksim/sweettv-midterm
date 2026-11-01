@@ -5,7 +5,7 @@
 <div class="titleblock">
 Student: Maksim Petrenko &nbsp;&nbsp; Team: Individual &nbsp;&nbsp; Email: madsm1006@gmail.com &nbsp;&nbsp; Date: 2026-11-01<br>
 Assignment: Midterm Quiz — TV Program Recommendation (sweet.tv Kaggle competition)<br>
-Code: https://github.com/TODO-MAKSIM/TODO-repo &nbsp;&nbsp; Kaggle user: underqualified
+Code: https://github.com/PetrenkoMaksim/sweettv-midterm &nbsp;&nbsp; Kaggle user: underqualified
 </div>
 
 **Abstract** — We recommend five TV programmes per user for ISO weeks 31–42 of 2020 from sweet.tv channel-viewing logs of weeks 11–30 and the programme schedule, scored by MAP@5. Views are joined to labelled airings by channel and time overlap, and every method is validated on the same temporal split (history weeks 11–20, target weeks 21–30) with the competition's own label rule; we compare popularity, Personalized PageRank (PPR), implicit ALS and association rules, and combine them in a LightGBM re-ranker. A rank-averaged ensemble of four LightGBM re-rankers reaches MAP@5 0.4319 on the 1,238 test users of the validation fold, against 0.3871 for the best single method (PPR) and 0.2688 for popularity; its Kaggle private score is 0.44826 (public 0.45214). Because the label counts repeatedly watched airings, methods that keep a user's own programmes on top dominate pure collaborative filtering.
