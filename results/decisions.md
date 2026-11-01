@@ -73,3 +73,11 @@ Times are MSK, 2026-11-01. Session start 13:22.
   results/kaggle_scores.csv. Kaggle displays names without "+" → submission files renamed with git mv (same content; ux_stats.csv
   regenerated, identical numbers); `run.py final` now writes names without "+"; make_pdf.sh and report point to the .jpg.
   While filling the report I first wrote the Kaggle−validation gap as "0.02–0.03"; computed values are 0.016–0.031 → fixed.
+- ~17:30 Maksim: the instructor allows an AI-drafted report if the student hand-checks it → Claude Code drafted §5 Discussion
+  (682 words, numbers only from results/), the two-user justification, §6 and the Kaggle access date. Claims of personal
+  verification are NOT asserted: each carries a TODO-MAKSIM-CONFIRM marker (make_pdf.sh refuses to build while any remains).
+  Two of my draft phrasings were wrong when checked against the sources and were fixed before commit ("printed nothing" →
+  it wrote the single-method files first; "heavy viewers dominate the test set" → not measured, removed). Reference URLs
+  checked with curl: all 200 except dblp [1] and the DOI (202, bot-check page per references.md) → Maksim opens [1] in a browser.
+  Page budget: removed the §4 UX paragraph (duplicated in §5); measured 5 pages of content before References.
+  Maksim replaced the screenshot: it now shows "Петренко Максим (underqualified)" on every row, same scores.

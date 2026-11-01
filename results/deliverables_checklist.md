@@ -8,12 +8,12 @@
 | Popularity baseline (reference, not counted) | Table 2 | done |
 | Final may be hybrid; each method evaluated alone first | Table 2 rows per method, then hybrid rows | done |
 | Program metadata used; no future viewing for training | §3 "Programme metadata used"; target-window views only build the truth | done |
-| Strategy for sweet.tv and why | §5 — facts in `results/discussion_notes.md` | **Maksim writes** |
-| Two users, justified, same users for all methods | Table 3 (+ `results/examples.md`); justification sentence | **Maksim: 1 sentence each** |
+| Strategy for sweet.tv and why | §5 — facts in `results/discussion_notes.md` | drafted; **Maksim hand-checks** |
+| Two users, justified, same users for all methods | Table 3 (+ `results/examples.md`); justification sentence | drafted; **Maksim hand-checks** |
 | Each method's Top-5 with IDs, titles, categories vs history & attributes | Table 3 + paragraph after it | done |
-| How/why methods differ; UX implications | §4 "What users would see" + §5 | facts done, **Maksim writes §5** |
-| Justify final strategy: validation, cost, examples | Table 2 (MAP + time), Table 3, §5 | **Maksim writes §5** |
-| Limitations and failure cases supported by results | `results/discussion_notes.md` → §5 | **Maksim writes §5** |
+| How/why methods differ; UX implications | §5 (drafted by Claude Code) | **Maksim hand-checks** |
+| Justify final strategy: validation, cost, examples | Table 2 (MAP + time), Table 3, §5 | drafted; **Maksim hand-checks** |
+| Limitations and failure cases supported by results | `results/discussion_notes.md` → §5 | drafted; **Maksim hand-checks** |
 | PDF report | `bash scripts/make_pdf.sh` → `deliverables/petrenko_maksim_midterm_report.pdf` (≤ 5 pages excl. references) | **Maksim** |
 | Original, unmodified AI-session export | `bash scripts/export_session.sh` → `deliverables/petrenko_maksim_midterm_session.json` | **Maksim** |
 | PDF: GitHub link | title block `TODO-MAKSIM` | **Maksim** |
